@@ -218,9 +218,6 @@ function updateWifiAccess()
             if($redis->ttl($redisfield)>0)
                 ldap_mod_add($ldap_conn, WIFIGROUP, array('member' => str_replace('*CLASS*',$klasse,CLASSDN)));
         }
-
-
-        echo "OK";
     } else {
         echo "Could not bind to the server. Check the username/password.<br />";
         echo "Server Response:"
