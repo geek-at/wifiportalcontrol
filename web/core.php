@@ -4,6 +4,7 @@ function managePostData()
 {
     $redis = getRedis();
     $cl = explode(',',CLASSES);
+    $updated = false;
     foreach($cl as $klasse)
     {
         $disable = $_POST['disable-'.$klasse];
@@ -13,10 +14,12 @@ function managePostData()
 
         if($disable)
         {
+            $updated = true;
             $redis->expire($redisfield,0);
         }
         else if($increase)
         {
+            $updated = true;
             $increase = intval($increase);
             $newttl = 0;
             $ttl = $redis->ttl($redisfield);
@@ -25,11 +28,13 @@ function managePostData()
             $redis->setex($redisfield,$newttl,$_SESSION['user']);
         }
     }
+    if($updated!==false)
+        updateWifiAccess();
 }
 
 function renderClassList()
 {
-    $table= '<form method="POST">
+    $table= '
     <table class="table table-dark">
     <thead>
       <tr>
@@ -66,10 +71,15 @@ function renderClassList()
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <div class="input-group-text">
-                    <input type="checkbox" aria-label="Checkbox for following text input">
+                    Um
                     </div>
                 </div>
-                <input type="number" name="increase-'.$klasse.'" class="form-control" placeholder="Um Minuten erweitern" aria-label="Text input with checkbox">
+                <input type="number" name="increase-'.$klasse.'" class="form-control" placeholder="0" value="0" aria-label="Text input with checkbox">
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                    Minuten verlängern
+                    </div>
+                </div>
             </div>
         </td>
       </tr>';
@@ -80,8 +90,7 @@ function renderClassList()
     </table>
     <div class="text-center">
     <input type="submit" name="submit" class="btn btn-warning" value="Speichern" /> 
-    </div>
-    </form>';
+    </div>';
 
     return $table;
     
@@ -184,4 +193,44 @@ function ldapdomtopath()
         $o[] = 'DC='.$part;
     }
     return implode(',',$o);
+}
+
+function updateWifiAccess()
+{
+    $redis = getRedis();
+    $domain_username = LDAPUSER.'@'.LDAPDOMAIN;
+    $ldap_conn = ldap_connect(LDAPSERVER);
+
+    ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, 3) or die("Could not set LDAP Protocol version");
+
+    // Authenticate the user and link the resource_id with
+    // the authentication.
+    if ($ldapbind = ldap_bind($ldap_conn, $domain_username, LDAPPASS) == true) {
+
+        //delete all members from wifi group
+        ldap_mod_del($ldap_conn, WIFIGROUP, array("member" => array()));
+
+        //add groups to group
+        $cl = explode(',',CLASSES);
+        foreach($cl as $klasse)
+        {
+            $redisfield = REDIS_PREFIX.'classes:'.$klasse;
+            if($redis->ttl($redisfield)>0)
+                ldap_mod_add($ldap_conn, WIFIGROUP, array('member' => str_replace('*CLASS*',$klasse,CLASSDN)));
+        }
+
+
+        echo "OK";
+    } else {
+        echo "Could not bind to the server. Check the username/password.<br />";
+        echo "Server Response:"
+
+            // Error number.
+            . "<br />Error Number: " . ldap_errno($ldap_conn)
+
+            // Error description.
+            . "<br />Description: " . ldap_error($ldap_conn);
+    }
+
+    ldap_close($ldap_conn);
 }
