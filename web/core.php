@@ -161,7 +161,7 @@ function verifyLdapUser($username, $password)
                 //check if this user is in the admin group
                 $filter = "(&(objectClass=user)(sAMAccountName=$username)(memberof=".ADMINGROUP."))";
                 //var_dump($filter);
-                $search_result = ldap_search($connect, ldapdomtopath(), $filter);
+                $search_result = ldap_search($connect, ADMINBASESEARCH, $filter);
                 $entries = ldap_get_entries($connect, $search_result);
                 @ldap_close($connect);
 

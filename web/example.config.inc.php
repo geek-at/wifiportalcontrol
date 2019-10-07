@@ -25,3 +25,6 @@ define('WIFIGROUP','CN=wlan,OU=students,DC=school,DC=local');
 // template of the CN of the groups that will be replaced with the actual group
 // *CLASS* will be replaced with the group name
 define('CLASSDN','CN=*CLASS*,OU=students,DC=school,DC=local');
+
+define('ADMINBASESEARCH','DN=Users,DC=school,DC=local');
+define('CLASSES','1a,1b');
