@@ -100,9 +100,9 @@ function renderLogin()
 {
     return '<div class="container">
 	<div class="d-flex justify-content-center h-100">
-		<div class="card">
+		<div class="card" style="margin-right:50px;">
 			<div class="card-header">
-				<h3>Login</h3>
+				<h3>LehrerInnen Login</h3>
 			</div>
 			<div class="card-body">
 				<form method="POST">
@@ -123,6 +123,16 @@ function renderLogin()
 						<input type="submit" name="submit" value="Login" class="btn float-right login_btn">
 					</div>
 				</form>
+			</div>
+        </div>
+        
+        <div class="card">
+			<div class="card-header">
+				<h3>SchülerInnen</h3>
+			</div>
+			<div class="card-body">
+            <a href="'.URL_AUTHENTICATE.'" class="btn btn-success btn-block">WLAN Login</a>
+            <a href="'.URL_LOGOUT.'" class="btn btn-danger btn-block">WLAN Logout</a>
 			</div>
 		</div>
 	</div>

@@ -16,6 +16,10 @@ define('LDAPSERVER','');
 define('LDAPUSER','');
 define('LDAPPASS','');
 
+// URLs
+define('URL_LOGOUT','');
+define('URL_AUTHENTICATE','');
+
 // the CN of the group that is allowed to use this site
 define('ADMINGROUP','CN=wifiadmins,DN=Users,DC=school,DC=local');
 
@@ -26,5 +30,8 @@ define('WIFIGROUP','CN=wlan,OU=students,DC=school,DC=local');
 // *CLASS* will be replaced with the group name
 define('CLASSDN','CN=*CLASS*,OU=students,DC=school,DC=local');
 
+// Where are the class groups found?
 define('ADMINBASESEARCH','DN=Users,DC=school,DC=local');
+
+// Which classes are to be searced. comma separated!
 define('CLASSES','1a,1b');
