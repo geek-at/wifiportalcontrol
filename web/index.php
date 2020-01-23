@@ -14,9 +14,11 @@ $template = file_get_contents(ROOT . DS . 'template.html');
 
 // CONTROLLER
 if ($_POST['submit'] == 'Login') {
-    $correct = verifyLdapUser($_POST['user'], $_POST['pass']);
+    $user = trim($_POST['user']);
+    $pw = trim($_POST['pass']);
+    $correct = verifyLdapUser($user, $pw);
     if ($correct) {
-        $_SESSION['user'] = $_POST['user'];
+        $_SESSION['user'] = $user;
         $out = container(renderMessage('Login erfolgreich', 'Sie werden gleich weitergeleitet..', 'success')) . '<script>window.location.href=\'?\';</script>';
     } else {
         $out = container(renderMessage('Fehler', 'Login fehlgeschlagen oder Zugang nicht berechtigt')) . renderLogin();
