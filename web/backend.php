@@ -31,11 +31,16 @@ switch($a)
 
     case 'addminutes':
         $increase = intval($_GET['minutes']);
-        $newttl = 0;
-        $ttl = $redis->ttl($redisfield);
-        if ($ttl) $newttl = $ttl;
-        $newttl += ($increase * 60);
-        $redis->setex($redisfield, $newttl, $_SESSION['user']);
+        if($increase === -1)
+            $redis->set($redisfield, $_SESSION['user']);
+        else
+        {
+            $newttl = 0;
+            $ttl = $redis->ttl($redisfield);
+            if ($ttl) $newttl = $ttl;
+            $newttl += ($increase * 60);
+            $redis->setex($redisfield, $newttl, $_SESSION['user']);
+        }
         updateWifiAccess();
 
         $o = ['status'=>'OK'];
