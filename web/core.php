@@ -231,7 +231,7 @@ function updateWifiAccess()
         //to delete
         $delclasses = array_diff($ist, $soll);
         foreach($delclasses as $klasse) {
-            echo "[D] Deleting $klasse\n";
+            //echo "[D] Deleting $klasse\n";
             $classdn = strtoupper(str_replace('*CLASS*', $klasse, CLASSDN));
             ldap_mod_del($ldap_conn, WIFIGROUP, array("member" => $classdn));
         }
@@ -239,7 +239,7 @@ function updateWifiAccess()
         //to add
         $addclasses = array_diff($soll, $ist);
         foreach($addclasses as $klasse) {
-            echo "[A] Adding $klasse\n";
+            //echo "[A] Adding $klasse\n";
             $classdn = strtoupper(str_replace('*CLASS*', $klasse, CLASSDN));
             ldap_mod_add($ldap_conn, WIFIGROUP, array('member' => $classdn));
         }
