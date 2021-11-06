@@ -78,7 +78,6 @@ function renderClassList()
         </tbody>
     </table>
     <div class="text-center">
-    <input type="submit" name="submit" class="btn btn-warning" value="Speichern" /> 
     </div>';
 
     return $table;
