@@ -208,16 +208,53 @@ function updateWifiAccess()
     // the authentication.
     if ($ldapbind = ldap_bind($ldap_conn, $domain_username, LDAPPASS) == true) {
 
+        $cl = explode(',', CLASSES);
+        //todo: smarter. using getActiveClassesOfWifiGroup($ldap_conn)
+        $ist = getActiveClassesOfWifiGroup($ldap_conn);
+        $soll = [];
+        foreach ($cl as $klasse) {
+            $redisfield = REDIS_PREFIX . 'classes:' . $klasse;
+            if ($redis->ttl($redisfield) > 0 || $redis->ttl($redisfield)===-1)
+                $soll[] = strtoupper($klasse);
+        }
+
+        /*
+        debug stuff
+        echo "\n\n\n[i] How it is:\n";
+        var_dump($ist);
+        echo "\n\n\n[i] How it should be:\n";
+        var_dump($soll);
+
+        echo "\n\n";
+        */
+
+        //to delete
+        $delclasses = array_diff($ist, $soll);
+        foreach($delclasses as $klasse) {
+            echo "[D] Deleting $klasse\n";
+            $classdn = strtoupper(str_replace('*CLASS*', $klasse, CLASSDN));
+            ldap_mod_del($ldap_conn, WIFIGROUP, array("member" => $classdn));
+        }
+
+        //to add
+        $addclasses = array_diff($soll, $ist);
+        foreach($addclasses as $klasse) {
+            echo "[A] Adding $klasse\n";
+            $classdn = strtoupper(str_replace('*CLASS*', $klasse, CLASSDN));
+            ldap_mod_add($ldap_conn, WIFIGROUP, array('member' => $classdn));
+        }
+
+        /*
         //delete all members from wifi group
         ldap_mod_del($ldap_conn, WIFIGROUP, array("member" => array()));
-
         //add groups to group
-        $cl = explode(',', CLASSES);
+        
         foreach ($cl as $klasse) {
             $redisfield = REDIS_PREFIX . 'classes:' . $klasse;
             if ($redis->ttl($redisfield) > 0 || $redis->ttl($redisfield)===-1)
                 ldap_mod_add($ldap_conn, WIFIGROUP, array('member' => str_replace('*CLASS*', $klasse, CLASSDN)));
         }
+        */
     } else {
         echo "Could not bind to the server. Check the username/password.<br />";
         echo "Server Response:"
@@ -230,4 +267,33 @@ function updateWifiAccess()
     }
 
     ldap_close($ldap_conn);
+}
+
+function getActiveClassesOfWifiGroup($ldap_conn)
+{
+    $search = ldap_search($ldap_conn, substr(CLASSDN,11), '(&(objectCategory=group)(memberOf='.WIFIGROUP.'))', ['members']);
+    $results = ldap_get_entries($ldap_conn, $search);
+
+    if(!$results) return false;
+    $cl = array_map('strtoupper',explode(',', CLASSES));
+    $classdns = [];
+    foreach($cl as $kl)
+        $classdns[] = strtoupper(str_replace('*CLASS*', $kl, CLASSDN));
+
+    $klassen = [];
+
+    for($i=0;$i<$results['count'];$i++)
+    {
+        $dn = strtoupper($results[$i]['dn']);
+        if(in_array($dn, $classdns))
+        {
+            $parts = explode(',', $dn);
+            $klasse = strtoupper(substr($parts[0], 3));
+            $klassen[] = $klasse;
+        }
+        else var_dump("$dn not in list");
+        
+    }
+
+    return $klassen;
 }
