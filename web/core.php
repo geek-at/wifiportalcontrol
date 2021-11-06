@@ -44,7 +44,7 @@ function renderClassList()
     $redis = getRedis();
 
     $cl = explode(',', CLASSES);
-    ksort($cl);
+    sort($cl);
     foreach ($cl as $klasse) {
         $redisfield = REDIS_PREFIX . 'classes:' . $klasse;
         $ttl = $redis->ttl($redisfield);
