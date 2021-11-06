@@ -32,9 +32,9 @@ if ($_POST['submit'] == 'Login') {
         $out = '<script>window.location.href=\'?\';</script>';
     } else {
         
-        $out  = '<form method="POST"><a href="?a=logout" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</a>';
+        $out  = '<form method="POST">';
         $out .= managePostData();
-        $out .= container(card('<h3>Guten Tag!</h3><h4 style="margin-left:30px;">welche Klassen dürfen heute ins WLAN?</h4> <div class="text-right"><input type="submit" name="submit" class="btn btn-warning" value="Speichern" /> <a href="?"  class="btn btn-success"><i class="fas fa-sync"></i> Refresh</a></div>'));
+        $out .= container(card('<h3>Guten Tag!</h3><h4 style="margin-left:30px;">welche Klassen dürfen heute ins WLAN?</h4> <div class="text-right"><a href="?a=logout" class="btn btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</a> <a href="?"  class="btn btn-success"><i class="fas fa-sync"></i> Refresh</a></div>'));
         $out .= container(renderClassList());
         $out .= '</form>';
     }
