@@ -89,7 +89,7 @@ function renderLogin()
 	<div class="d-flex justify-content-center h-100">
 		<div class="card" style="margin-right:50px;">
 			<div class="card-header">
-				<h3>Freischaltungsplattform</h3>
+				<h3>Freischaltungsplattform für Lehrkräfte</h3>
 			</div>
 			<div class="card-body">
 				<form method="POST">
