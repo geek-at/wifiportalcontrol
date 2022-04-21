@@ -89,7 +89,7 @@ function renderLogin()
 	<div class="d-flex justify-content-center h-100">
 		<div class="card" style="margin-right:50px;">
 			<div class="card-header">
-				<h3>LehrerInnen Login</h3>
+				<h3>Freischaltungsplattform</h3>
 			</div>
 			<div class="card-body">
 				<form method="POST">
@@ -115,7 +115,7 @@ function renderLogin()
         
         <div class="card">
 			<div class="card-header">
-				<h3>SchülerInnen</h3>
+				<h3>Im WLAN anmelden</h3>
 			</div>
 			<div class="card-body">
             <a href="' . URL_AUTHENTICATE . '" class="btn btn-success btn-block">WLAN Login</a>
