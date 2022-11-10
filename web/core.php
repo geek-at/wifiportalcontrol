@@ -273,7 +273,7 @@ function getActiveClassesOfWifiGroup($ldap_conn)
     $search = ldap_search($ldap_conn, substr(CLASSDN,11), '(&(objectCategory=group)(memberOf='.WIFIGROUP.'))', ['members']);
     $results = ldap_get_entries($ldap_conn, $search);
 
-    if(!$results) return false;
+    if(!$results) return [];
     $cl = array_map('strtoupper',explode(',', CLASSES));
     $classdns = [];
     foreach($cl as $kl)
