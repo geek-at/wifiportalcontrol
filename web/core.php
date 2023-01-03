@@ -54,7 +54,7 @@ function renderClassList()
             $status = '<span class="text-success">Freigeschalten von <span class="text-warning">'.$user.'</span> bis ' . date("d.m.y H:i", time() + $ttl) . '</span>
                         <div id="timer_'.$klasse.'"><script>$( document ).ready(function() {renderCountdown("#timer_'.$klasse.'",'.($ttl*1000).')});</script></div>';
         else if($ttl===-1)
-            $status = '<span class="text-success">Bis auf widerruf freigeschalten</span>';
+            $status = '<span class="text-success">Von <span class="text-warning">'.$user.'</span> bis auf widerruf freigeschalten</span>';
         else
             $status = '<span class="text-danger">Gesperrt</span>';
 
