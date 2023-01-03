@@ -35,3 +35,7 @@ define('ADMINBASESEARCH','DN=Users,DC=school,DC=local');
 
 // Which classes are to be searced. comma separated!
 define('CLASSES','1a,1b');
+
+// Possible settings
+define('HIDE_DAY',false); //hide "+1 day
+define('HIDE_INDEFINITELY',false); // hide bis auf wiederruf

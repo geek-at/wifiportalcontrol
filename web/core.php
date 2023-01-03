@@ -47,10 +47,12 @@ function renderClassList()
     sort($cl);
     foreach ($cl as $klasse) {
         $redisfield = REDIS_PREFIX . 'classes:' . $klasse;
+        $user = $redis->get($redisfield);
         $ttl = $redis->ttl($redisfield);
 
         if ($ttl > 0)
-            $status = '<span class="text-success">Freigeschalten bis ' . date("d.m.y H:i", time() + $ttl) . '</span><div id="timer_'.$klasse.'"><script>$( document ).ready(function() {renderCountdown("#timer_'.$klasse.'",'.($ttl*1000).')});</script></div>';
+            $status = '<span class="text-success">Freigeschalten von <span class="text-warning">'.$user.'</span> bis ' . date("d.m.y H:i", time() + $ttl) . '</span>
+                        <div id="timer_'.$klasse.'"><script>$( document ).ready(function() {renderCountdown("#timer_'.$klasse.'",'.($ttl*1000).')});</script></div>';
         else if($ttl===-1)
             $status = '<span class="text-success">Bis auf widerruf freigeschalten</span>';
         else
@@ -67,8 +69,8 @@ function renderClassList()
             <button klasse="'.$klasse.'" minutes="10" class="addminutes btn btn-primary">+10 Minuten</button>
             <button klasse="'.$klasse.'" minutes="30" class="addminutes btn btn-primary">+30 Minuten</button>
             <button klasse="'.$klasse.'" minutes="60" class="addminutes btn btn-primary">+60 Minuten</button>
-            <button klasse="'.$klasse.'" minutes="1440" class="addminutes btn btn-primary">+1 Tag</button>
-            <button klasse="'.$klasse.'" minutes="-1" class="addminutes btn btn-primary">Bis auf Widerruf</button>
+            <button klasse="'.$klasse.'" minutes="1440" '.((defined('HIDE_DAY') && HIDE_DAY ===true)?'style="display:none"':'').' class="addminutes btn btn-primary">+1 Tag</button>
+            <button klasse="'.$klasse.'" minutes="-1"   '.((defined('HIDE_INDEFINITELY') && HIDE_INDEFINITELY ===true)?'style="display:none"':'').' class="addminutes btn btn-primary">Bis auf Widerruf</button>
         ';
         $table.='</td>
       </tr>';
